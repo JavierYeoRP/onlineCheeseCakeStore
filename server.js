@@ -40,11 +40,11 @@ app.get('/allcheesecakes', async (req, res) => {
  
 // Example Route: Create a new cheesecake
 app.post('/addcheesecake', async (req, res) => {
-    const { cheesecake_name, cheesecake_calories } = req.body;
+    const { Cheesecake_name, Cheesecake_calories } = req.body;
     try {
         let connection = await mysql.createConnection(dbConfig);
-        await connection.execute('INSERT INTO Cheesecakes (Cheesecake_name, Cheesecake_calories) VALUES (?, ?)', [cheesecake_name, cheesecake_calories]);
-        res.status(201).json({ message: 'Cheesecake '+cheesecake_name+' added successfully' });
+        await connection.execute('INSERT INTO Cheesecakes (Cheesecake_name, Cheesecake_calories) VALUES (?, ?)', [Cheesecake_name, Cheesecake_calories]);
+        res.status(201).json({ message: 'Cheesecake '+Cheesecake_name+' added successfully' });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Server error - could not add cheesecake '+cheesecake_name });
