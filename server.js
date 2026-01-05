@@ -50,3 +50,42 @@ app.post('/addcheesecake', async (req, res) => {
         res.status(500).json({ message: 'Server error - could not add cheesecake '+cheesecake_name });
     }
 });
+
+// Example Route: Update a cheesecake by ID
+app.put('/updatecheesecake/:id', async (req, res) => {
+    const cheesecakeId = req.params.id;
+    const { Cheesecake_name, Cheesecake_calories } = req.body;
+    try {
+        let connection = await mysql.createConnection(dbConfig);
+        const [result] = await connection.execute(
+            'UPDATE Cheesecakes SET Cheesecake_name = ?, Cheesecake_calories = ? WHERE id = ?',
+            [Cheesecake_name, Cheesecake_calories, cheesecakeId]
+        );
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Cheesecake not found' });
+        }
+        res.json({ message: 'Cheesecake updated successfully' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error - could not update cheesecake' });
+    }
+});
+
+// Example Route: Delete a cheesecake by ID
+app.delete('/deletecheesecake/:id', async (req, res) => {
+    const cheesecakeId = req.params.id;
+    try {
+        let connection = await mysql.createConnection(dbConfig);
+        const [result] = await connection.execute(
+            'DELETE FROM Cheesecakes WHERE id = ?',
+            [cheesecakeId]
+        );
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Cheesecake not found' });
+        }
+        res.json({ message: 'Cheesecake deleted successfully' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error - could not delete cheesecake' });
+    }
+});
